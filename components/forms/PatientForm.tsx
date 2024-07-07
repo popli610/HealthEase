@@ -7,47 +7,56 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Form } from "@/components/ui/form";
-import { createUser } from "@/lib/actions/patient.actions";
-import { UserFormValidation } from "@/lib/validation";
+// import { createUser } from "@/lib/actions/patient.actions";
+// import { UserFormValidation } from "@/lib/validation";
 
-import "react-phone-number-input/style.css";
-import CustomFormField, { FormFieldType } from "../CustomFormField";
-import SubmitButton from "../SubmitButton";
+// import "react-phone-number-input/style.css";
+import CustomFormField from "../CustomFormField";
+// import SubmitButton from "../SubmitButton";
+
+const formSchema = z.object({
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+});
 
 export const PatientForm = () => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);  
+  const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof UserFormValidation>>({
-    resolver: zodResolver(UserFormValidation),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      username: "",
     },
   });
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+  }
 
-  const onSubmit = async (values: z.infer<typeof UserFormValidation>) => {
-    setIsLoading(true);
+  //   const onSubmit = async (values: z.infer<typeof UserFormValidation>) => {
+  //     setIsLoading(true);
 
-    try {
-      const user = {
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
-      };
+  //     try {
+  //       const user = {
+  //         name: values.name,
+  //         email: values.email,
+  //         phone: values.phone,
+  //       };
 
-      const newUser = await createUser(user);
+  //       const newUser = await createUser(user);
 
-      if (newUser) {
-        router.push(`/patients/${newUser.$id}/register`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  //       if (newUser) {
+  //         router.push(`/patients/${newUser.$id}/register`);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
 
-    setIsLoading(false);
-  };
+  //     setIsLoading(false);
+  //   };
 
   return (
     <Form {...form}>
@@ -58,16 +67,16 @@ export const PatientForm = () => {
         </section>
 
         <CustomFormField
-          fieldType={FormFieldType.INPUT}
+          //   fieldType={FormFieldType.INPUT}
           control={form.control}
-          name="name"
-          label="Full name"
-          placeholder="John Doe"
-          iconSrc="/assets/icons/user.svg"
-          iconAlt="user"
+          //   name="name"
+          //   label="Full name"
+          //   placeholder="John Doe"
+          //   iconSrc="/assets/icons/user.svg"
+          //   iconAlt="user"
         />
 
-        <CustomFormField
+        {/* <CustomFormField
           fieldType={FormFieldType.INPUT}
           control={form.control}
           name="email"
@@ -83,9 +92,9 @@ export const PatientForm = () => {
           name="phone"
           label="Phone number"
           placeholder="(555) 123-4567"
-        />
+        /> */}
 
-        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+        {/* <SubmitButton isLoading={isLoading}>Get Started</SubmitButton> */}
       </form>
     </Form>
   );
